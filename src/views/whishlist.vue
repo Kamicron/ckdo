@@ -5,7 +5,7 @@ export default {
   data() {
     return {
       listeCadeau: [],
-      testconnected: JSON.parse(localStorage.getItem("connected")) || false,
+      connected: JSON.parse(localStorage.getItem("connected")) || false,
     };
   },
   methods: {
@@ -37,7 +37,7 @@ export default {
 </script>
 
 <template>
-  <main v-if="testconnected">
+  <main v-if="connected">
     <div class="main_title">
       <h1>Liste de voeux</h1>
     </div>

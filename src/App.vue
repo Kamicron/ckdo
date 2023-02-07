@@ -11,7 +11,7 @@ export default {
         email: null,
         password: null
       },
-      message: null,
+      message: JSON.parse(localStorage.getItem("message")) || null,
       connected: JSON.parse(localStorage.getItem("connected")) || false,
     }
   },
@@ -22,6 +22,8 @@ export default {
         console.log('user connecté', response.user);
         this.user = response.user;
         this.message = "Utilsateur connecté : " + this.user.email;
+        localStorage.setItem("message", JSON.stringify(this.message));
+
         this.connected = true;
         localStorage.setItem("connected", JSON.stringify(this.connected));
         
@@ -31,6 +33,7 @@ export default {
         this.message = "Erreur de connexion";
         this.connected = false;
         localStorage.setItem("connected", JSON.stringify(this.connected));
+        localStorage.setItem("message", JSON.stringify(this.message));
       })
     }
   },
