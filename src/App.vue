@@ -12,7 +12,7 @@ export default {
         password: null
       },
       message: null,
-      connected: false,
+      connected: JSON.parse(localStorage.getItem("connected")) || false,
     }
   },
   methods: {
@@ -23,13 +23,18 @@ export default {
         this.user = response.user;
         this.message = "Utilsateur connecté : " + this.user.email;
         this.connected = true;
+        localStorage.setItem("connected", JSON.stringify(this.connected));
+        
       })
       .catch ((error) => {
         console.log('Erreur de connexion', error);
         this.message = "Erreur de connexion";
         this.connected = false;
+        localStorage.setItem("connected", JSON.stringify(this.connected));
       })
     }
+  },
+  mounted() {
   },
   components: {
     RouterLink,
