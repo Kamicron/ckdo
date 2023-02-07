@@ -13,28 +13,31 @@ export default {
       },
       message: JSON.parse(localStorage.getItem("message")) || null,
       connected: JSON.parse(localStorage.getItem("connected")) || false,
+      userid: "",
     }
   },
   methods: {
     OnCnx() {
       signInWithEmailAndPassword(getAuth(), this.user.email, this.user.password)
-      .then((response) => {
-        console.log('user connecté', response.user);
-        this.user = response.user;
-        this.message = "Utilsateur connecté : " + this.user.email;
-        localStorage.setItem("message", JSON.stringify(this.message));
+        .then((response) => {
+          console.log('user connecté', response.user);
+          this.userid = response.user.uid;
+          console.log('app id: ',this.userid);
+          this.user = response.user;
+          this.message = "Utilsateur connecté : " + this.user.email;
+          localStorage.setItem("message", JSON.stringify(this.message));
 
-        this.connected = true;
-        localStorage.setItem("connected", JSON.stringify(this.connected));
-        
-      })
-      .catch ((error) => {
-        console.log('Erreur de connexion', error);
-        this.message = "Erreur de connexion";
-        this.connected = false;
-        localStorage.setItem("connected", JSON.stringify(this.connected));
-        localStorage.setItem("message", JSON.stringify(this.message));
-      })
+          this.connected = true;
+          localStorage.setItem("connected", JSON.stringify(this.connected));
+
+        })
+        .catch((error) => {
+          console.log('Erreur de connexion', error);
+          this.message = "Erreur de connexion";
+          this.connected = false;
+          localStorage.setItem("connected", JSON.stringify(this.connected));
+          localStorage.setItem("message", JSON.stringify(this.message));
+        })
     }
   },
   mounted() {
@@ -70,7 +73,8 @@ export default {
               <input type="text" class="form-control" placeholder='votre email' v-model="user.email" required>
             </div>
             <div v-if="!connected" class="input-group mb-3">
-              <input type="password" class="form-control" placeholder='votre mot de passe' v-model="user.password" required>
+              <input type="password" class="form-control" placeholder='votre mot de passe' v-model="user.password"
+                required>
             </div>
             <div class="alert alert-warning text-center mb-3" v-if="message != null">
               {{ message }}

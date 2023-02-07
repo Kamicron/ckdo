@@ -1,5 +1,7 @@
 <script>
 import { getFirestore, collection, doc, getDocs, addDoc, updateDoc, deleteDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/9.7.0/firebase-firestore.js'
+// dans un autre fichier
+import App from '@/App.vue';
 
 export default {
   data() {
@@ -10,28 +12,36 @@ export default {
   },
   methods: {
     async getGift() {
+      console.log("test");
+
+      let test = this.currentUser;
+      console.log("user id wish",  App.userid);
       const firestore = getFirestore();
       const dbGift = collection(firestore, "liste");
       const query = await getDocs(dbGift);
-      console.log('query',query);
       query.forEach((doc) => {
-        console.log('doc' , doc.gift_name);
 
         let gift = {
-          
+
           name: doc.data().gift_name,
           url: doc.data().gift_url,
           user_id: doc.data().id_user,
         }
-        console.log('gift' , gift);
-        this.listeCadeau.push(gift);
+        // if ($id == user_id) {
+          this.listeCadeau.push(gift);
+        // }
+
       });
-      console.log(this.listeCadeau);
 
     }
   },
   mounted() {
     this.getGift();
+  },
+  computed: {
+    userid() {
+      return App.userid;
+    }
   }
 }
 </script>
@@ -69,5 +79,6 @@ export default {
 </template>
 
 <style>
+
 </style>
 
