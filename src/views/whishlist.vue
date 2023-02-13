@@ -9,6 +9,7 @@ export default {
     return {
       imagedata: "",
       showForm: false,
+      showSuccessMessage: false,
       listeCadeau: [],
       connected: JSON.parse(localStorage.getItem("connected")) || false,
       userid: JSON.parse(localStorage.getItem("userid")) || null,
@@ -70,9 +71,11 @@ export default {
         console.log('uploaded a base 64 string');
         const db = getFirestore();
         const docRef = addDoc(collection(db, "liste"), this.cadeau);
-
+        this.showForm = false;
       });
+
       this.$router.push('/whishlist');
+      
     }
   },
   computed: {
@@ -93,66 +96,72 @@ export default {
 <template>
   <main v-if="connected">
     <div class="main_title">
-      <h1>Liste de voeux <span class="add" v-on:click="showForm = !showForm">+</span></h1>
+      <h1>Liste de voeux <svg v-on:click="showForm = !showForm" class="svg-icon" viewBox="0 0 20 20">
+          <path
+            d="M14.613,10c0,0.23-0.188,0.419-0.419,0.419H10.42v3.774c0,0.23-0.189,0.42-0.42,0.42s-0.419-0.189-0.419-0.42v-3.774H5.806c-0.23,0-0.419-0.189-0.419-0.419s0.189-0.419,0.419-0.419h3.775V5.806c0-0.23,0.189-0.419,0.419-0.419s0.42,0.189,0.42,0.419v3.775h3.774C14.425,9.581,14.613,9.77,14.613,10 M17.969,10c0,4.401-3.567,7.969-7.969,7.969c-4.402,0-7.969-3.567-7.969-7.969c0-4.402,3.567-7.969,7.969-7.969C14.401,2.031,17.969,5.598,17.969,10 M17.13,10c0-3.932-3.198-7.13-7.13-7.13S2.87,6.068,2.87,10c0,3.933,3.198,7.13,7.13,7.13S17.13,13.933,17.13,10">
+          </path>
+        </svg> </h1>
     </div>
     <div class="wrapper">
-    <transition>
+      <transition>
 
-      <form enctype="multipart/from-data" @submit.prevent="createCadeau" v-if="showForm">
+        <form enctype="multipart/from-data" @submit.prevent="createCadeau" v-if="showForm">
 
-        <div class="card bg-dark">
-          <div class="card-header">
-            <h5>Ajouter un cadeau</h5>
-          </div>
-          <div class="card-body">
-            <div class="row">
-              <div class="col-6">
-                <div>
-                  <img :src="imagedata" class="preview img-fluid">
-                </div>
-              </div>
-              <div class="col-6">
-                <div class="input-group">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text">Nom</span>
-                  </div>
-                  <input class="form-control" placeholder="Nom du cadeau" v-model="cadeau.gift_name" required>
-                </div>
-                <br>
-                <div class="input-group">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text">lien du cadeau</span>
-                  </div>
-                  <input class="form-control" placeholder="Url du cadeau" v-model="cadeau.gift_url" required>
-                </div>
-                <br>
-
-                <div class="input-group">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text">Photo</span>
-                  </div>
-                  <div class="custom-file">
-                    <input type="file" class="custom-file-input" ref="file" id="file" @change="previewImage" required>
-                    <label for="file" class="custom-file-label">Sélectionner l'image</label>
+          <div class="card bg-dark">
+            <div class="card-header">
+              <h5>Ajouter un cadeau</h5>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-6">
+                  <div>
+                    <img :src="imagedata" class="preview img-fluid">
                   </div>
                 </div>
+                <div class="col-6">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">Nom</span>
+                    </div>
+                    <input class="form-control" placeholder="Nom du cadeau" v-model="cadeau.gift_name" required>
+                  </div>
+                  <br>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">lien du cadeau</span>
+                    </div>
+                    <input class="form-control" placeholder="Url du cadeau" v-model="cadeau.gift_url" required>
+                  </div>
+                  <br>
 
+                  <div class="input-group mb-3">
+                    <input type="file" class="form-control" ref="file" id="file" @change="previewImage" required>
+                    <label class="input-group-text" for="file">Sélectionner l'image</label>
+                  </div>
+
+                </div>
               </div>
             </div>
+            <div class="card-footer wrapper endflex">
+              <button v-on:click="showSuccessMessage=true" type='submit' class="float-left btn btn">Créer</button>
+            </div>
           </div>
-          <div class="card-footer"><button type='submit' class="float-left btn btn">Créer</button></div>
-        </div>
-      </form>
+        </form>
+      </transition>
+      <transition name="fade">
+      <div class="alert alert-success mt-3" v-if="showSuccessMessage">
+        <strong>Succès!</strong> Le cadeau a été créé avec succès.
+      </div>
     </transition>
       <div class="wrapper  mb-3">
-      <div class="card" style="width: 18rem;" v-for='cadeau in filteredList' :key="cadeau.id">
-        <img :src="cadeau.gift_photo" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">{{ cadeau.gift_name }}</h5>
-          <a :href="cadeau.gift_url" class="btn btn-primary" target="_blank">Acceder au site marchand</a>
+        <div class="card" style="width: 18rem;" v-for='cadeau in filteredList' :key="cadeau.id">
+          <img :src="cadeau.gift_photo" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">{{ cadeau.gift_name }}</h5>
+            <a :href="cadeau.gift_url" class="btn btn-primary" target="_blank">Acceder au site marchand</a>
+          </div>
         </div>
       </div>
-    </div>
     </div>
   </main>
   <main v-else>
@@ -161,11 +170,22 @@ export default {
 </template>
 
 <style>
-.fade-enter-active, .fade-leave-active {
+form {
+  width: 100%;
+}
+
+.fade-enter-active,
+.fade-leave-active {
   transition: opacity .5s;
 }
-.fade-enter, .fade-leave-to {
+
+.fade-enter,
+.fade-leave-to {
   opacity: 0;
+}
+
+.endflex{
+  justify-content: end;
 }
 
 .card {
@@ -190,7 +210,7 @@ export default {
 }
 
 .add {
-  color : var(--dynamic-color);
+  color: var(--dynamic-color);
 }
 </style>
 

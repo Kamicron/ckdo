@@ -16,3 +16,30 @@ body.dark-mode {
   --dynamic-color: #ED1C24;
   --second-color: #666B6A;
   }
+
+  .svg-icon {
+    width: 1em;
+    height: 1em;
+  }
+  
+  .svg-icon path,
+  .svg-icon polygon,
+  .svg-icon rect {
+    fill: #F5F5F5;
+  }
+  
+  .svg-icon circle {
+    stroke: #F5F5F5;
+    stroke-width: 1;
+  }
+
+
+  .svg-icon:hover {
+    fill: #ED1C24;
+  }
+  
+  .svg-icon:hover {
+    stroke: #ED1C24;
+    stroke-width: 1;
+    cursor: pointer;
+  }
