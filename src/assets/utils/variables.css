@@ -5,6 +5,8 @@
   --dynamic-color: #ED1C24;
   --second-color: #ACAFAE;
   --light-color : #A0EEC0;
+  --white : #F5F5F5;
+  --dark : #474747;
 }
 
 body.dark-mode {
