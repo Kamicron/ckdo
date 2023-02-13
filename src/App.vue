@@ -3,7 +3,6 @@ import { RouterLink, RouterView } from 'vue-router'
 import ModeSwitcher from './components/ModeSwitcher.vue';
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.7.0/firebase-auth.js'
 
-
 export default {
   data() {
     return {
@@ -13,7 +12,7 @@ export default {
       },
       message: JSON.parse(localStorage.getItem("message")) || null,
       connected: JSON.parse(localStorage.getItem("connected")) || false,
-      userid: "",
+      userid: null,
     }
   },
   methods: {
@@ -23,6 +22,8 @@ export default {
           console.log('user connecté', response.user);
           this.userid = response.user.uid;
           console.log('app id: ',this.userid);
+          localStorage.setItem("userid", JSON.stringify(this.userid));
+
           this.user = response.user;
           this.message = "Utilsateur connecté : " + this.user.email;
           localStorage.setItem("message", JSON.stringify(this.message));
