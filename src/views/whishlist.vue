@@ -78,6 +78,17 @@ export default {
       this.$router.push('/whishlist');
 
     },
+    async editCadeau(id) {
+      const cadeau = this.listeCadeau.find(gift => gift.id === id);
+      this.cadeau = { ...cadeau };
+      this.showForm = true;
+    },
+    async updateCadeau() {
+      const db = getFirestore();
+      const docRef = doc(collection(db, "liste"), this.cadeau.id);
+      await updateDoc(docRef, this.cadeau);
+      this.showForm = false;
+    },
     async deleteCadeau(id) {
       const db = getFirestore();
       const docRef = doc(collection(db, "liste"), id);
@@ -117,9 +128,7 @@ export default {
     </div>
     <div class="wrapper">
       <transition>
-
         <form enctype="multipart/from-data" @submit.prevent="createCadeau" v-if="showForm">
-
           <div class="card bg-dark">
             <div class="card-header">
               <h5>Ajouter un cadeau</h5>
@@ -161,6 +170,7 @@ export default {
           </div>
         </form>
       </transition>
+      
       <div class="wrapper  mb-3">
         <div class="card" style="width: 18rem;" v-for='cadeau in filteredList' :key="cadeau.id">
           <img :src="cadeau.gift_photo" class="card-img-top" alt="...">
@@ -171,6 +181,7 @@ export default {
           <div class="card-footer">
             <img v-on:click="showDeleteMessage = true" src="../../public/bin.png" class='icon' alt="Supprimer"
               @click="deleteCadeau(cadeau.id)">
+              <img src="../../public/draw.png" class='icon' alt="Modifier" @click="editCadeau(cadeau.id)">
           </div>
         </div>
       </div>
