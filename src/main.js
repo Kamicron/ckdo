@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import 'bootstrap/dist/css/bootstrap.css'
+
 import './assets/main.css'
 
   // Import the functions you need from the SDKs you need

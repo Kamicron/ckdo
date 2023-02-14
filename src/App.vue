@@ -64,6 +64,9 @@ export default {
           <li v-if="connected" class="header_menu-item">
             <RouterLink to="/whishlist">Liste de voeux</RouterLink>
           </li>
+          <li v-if="!connected" class="header_menu-item">
+            <RouterLink to="/inscription">S'inscrire</RouterLink>
+          </li>
         </ul>
         <div>
           <form @submit.prevent="OnCnx()">
