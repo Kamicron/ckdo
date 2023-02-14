@@ -19,9 +19,7 @@ export default {
     OnCnx() {
       signInWithEmailAndPassword(getAuth(), this.user.email, this.user.password)
         .then((response) => {
-          console.log('user connecté', response.user);
           this.userid = response.user.uid;
-          console.log('app id: ',this.userid);
           localStorage.setItem("userid", JSON.stringify(this.userid));
 
           this.user = response.user;
@@ -33,7 +31,6 @@ export default {
 
         })
         .catch((error) => {
-          console.log('Erreur de connexion', error);
           this.message = "Erreur de connexion";
           this.connected = false;
           localStorage.setItem("connected", JSON.stringify(this.connected));
